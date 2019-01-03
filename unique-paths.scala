@@ -1,18 +1,21 @@
-// https://leetcode.com/problems/unique-paths
+// https://leetcode.com/problems/unique-paths/submissions/
 object Solution {
   def uniquePaths(m: Int, n: Int): Int = {
     if (m <= 0 || n <= 0) {
       return 0
     }
-    val matrix = Array.fill[Int](m + 1)(0)
-    for (j <- 0 until n; i <- 1 to m) {
-      if (j == 0 && i == 1) {
-        matrix(i) = 1
-      } else {
-        matrix(i) = matrix(i - 1) + matrix(i)
+    var cache: Map[String, Int] = Map()
+    def move(i: Int, j: Int): Int = {
+      val key: String = List(i, j, m, n).mkString("-")
+      if (cache.contains(key)) cache(key)
+      else {
+        var res = 0
+        if (i >= m - 1 || j >= n - 1) res = 1
+        else res = move(i + 1, j) + move(i, j + 1)
+        cache += key -> res
+        res
       }
     }
-    return matrix(m)
+    move(0, 0)
   }
 }
-
